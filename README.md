@@ -15,6 +15,9 @@ sudo setcap 'cap_net_bind_service=+ep' hsts-proxy
 # Test
 curl --resolve 'ifconfig.co:80:127.0.0.1' http://ifconfig.co -v
 # Strict-Transport-Security header presents in the response
+
+# Healthcheck
+curl -A 'ELB-HealthChecker/2.0' localhost
 ```
 
 Use [`build-all`] to create binaries of all supported targets.

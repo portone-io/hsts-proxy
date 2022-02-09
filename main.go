@@ -4,6 +4,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func main() {
@@ -11,6 +12,13 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 		log.Printf("Request received (%v), sending it to the origin ..", req)
+
+		// Handle health checker
+		if strings.HasPrefix(req.UserAgent(), "ELB-HealthChecker") {
+			w.WriteHeader(200)
+			w.Write([]byte("OK\n"))
+			return
+		}
 
 		// Reverse proxy the request to the origin
 		switch req.Host {
