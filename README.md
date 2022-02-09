@@ -6,6 +6,8 @@ the origin server's response and returns it to the user.
 
 ```bash
 go build
+# It uses 80 port directly
+sudo setcap 'cap_net_bind_service=+ep' hsts-proxy
 
 # Run the proxy
 ./hsts-proxy
