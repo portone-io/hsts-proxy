@@ -13,12 +13,28 @@ func main() {
 		log.Printf("Request received (%v), sending it to the origin ..", req)
 
 		// Reverse proxy the request to the origin
+		switch req.Host {
+		case "secure-api.iamport.kr":
+			req.Host = "api.iamport.kr"
+		case "secure-service.iamport.kr":
+			req.Host = "service.iamport.kr"
+		default:
+			log.Printf("Denied unallowed Host: %v", req.Host)
+			w.WriteHeader(403)
+			return
+		}
 		req.RequestURI = ""
 		req.URL.Scheme = "https"
+		req.URL.Host = req.Host
+		if req.Host == "secure-api.iamport.kr" {
+			req.URL.Host = "api.iamport.kr"
+			req.Host = "api.iamport.kr"
+		}
 		req.URL.Host = req.Host
 		res, err := client.Do(req)
 		if err != nil {
 			log.Printf("Error while sending request to the origin: %v", err)
+			w.WriteHeader(500)
 			return
 		}
 
