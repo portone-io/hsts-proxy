@@ -24,6 +24,7 @@ Use [`build-all`] to create binaries of all supported targets.
 # Install the binary
 sudo curl -Lo /usr/local/bin/hsts-proxy \
   https://github.com/iamport/hsts-proxy/releases/download/v1.0.0/hsts-proxy-linux-amd64
+sudo chmod +x /usr/local/bin/hsts-proxy
 
 # Register hsts-proxy service
 sudo tee /etc/systemd/system/hsts-proxy.service <<'EOF'
