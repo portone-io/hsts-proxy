@@ -60,11 +60,14 @@ func main() {
 		// Copy the status
 		w.WriteHeader(res.StatusCode)
 		// Copy the body
-		io.Copy(w, res.Body)
+		_, err = io.Copy(w, res.Body)
+		if err != nil {
+			log.Printf("Error while copying response body: %v", err)
+		}
 
 		log.Printf("Successfully proxied response (%v)", res)
 	})
 
 	log.Printf("Starting server on :80 ...")
-	http.ListenAndServe(":80", nil)
+	log.Fatal(http.ListenAndServe(":80", nil))
 }
