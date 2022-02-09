@@ -58,7 +58,7 @@ func main() {
 		}
 		// Copy the headers
 		for key, values := range res.Header {
-			if _, exists := predefined["foo"]; exists {
+			if _, exists := predefined[key]; exists {
 				continue
 			}
 			for _, value := range values {
