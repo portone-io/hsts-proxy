@@ -17,6 +17,8 @@ curl --resolve 'ifconfig.co:80:127.0.0.1' http://ifconfig.co -v
 # Strict-Transport-Security header presents in the response
 ```
 
+Use [`build-all`] to create binaries of all supported targets.
+
 ### How to install
 ```bash
 # Install the binary
@@ -42,3 +44,5 @@ EOF
 # Enable and start hsts-proxy service
 sudo systemctl enable --now hsts-proxy
 ```
+
+[`build-all`]: build-all

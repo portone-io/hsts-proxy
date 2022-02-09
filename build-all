@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+from json import loads
+from os import environ
+from pathlib import Path
+from subprocess import Popen, PIPE
+from typing import Optional, Dict
+
+def makeenv(os: str, arch: str, arm: Optional[int] = None) -> Dict[str, str]:
+    return {
+        **environ,
+        "GOOS": os,
+        "GOARCH": arch,
+        "GOARM": "" if arm is None else str(arm),
+        #"CGO_ENABLED": "0",
+    }
+
+NAME = Path(__file__).parent.name
+jobs = []
+for dist in loads(Popen(["go", "tool", "dist", "list", "-json"], stdout=PIPE).stdout.read()):
+    os, arch = dist["GOOS"], dist["GOARCH"]
+    if os in ("android", "ios"):
+        continue
+    ext = '.exe' if os == 'windows' else ''
+    if arch == "arm":
+        jobs += [Popen(["go", "build", "-o", f"{NAME}-{os}-armv{arm}{ext}"], env=makeenv(os, arch, arm)) for arm in range(5, 8)]
+    else:
+        jobs.append(Popen(["go", "build", "-o", f"{NAME}-{os}-{arch}{ext}"], env=makeenv(os, arch)))
+
+failed = False
+for job in jobs:
+    job.wait()
+    if job.returncode == 0:
+        print(f"{' '.join(job.args)}: finished")
+    else:
+        print(f"{' '.join(job.args)}: failed with exit code {job.returncode}")
+        failed = True
+
+if failed:
+    exit(1)
