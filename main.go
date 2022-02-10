@@ -34,11 +34,6 @@ func main() {
 		req.RequestURI = ""
 		req.URL.Scheme = "https"
 		req.URL.Host = req.Host
-		if req.Host == "secure-api.iamport.kr" {
-			req.URL.Host = "api.iamport.kr"
-			req.Host = "api.iamport.kr"
-		}
-		req.URL.Host = req.Host
 		res, err := client.Do(req)
 		if err != nil {
 			log.Printf("Error while sending request to the origin: %v", err)
